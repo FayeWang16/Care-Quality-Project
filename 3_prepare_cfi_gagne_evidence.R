@@ -1,6 +1,7 @@
 source("Code/shareable_clinical_metrics/1_configure_clinical_metrics.R")
 
-# Project: Frailty_Komoto shareable clinical metrics (2016-2025)
+# Project: Care Quality (multimorbidity care quality in people with and without HIV), 2016-2025
+# Adapted from Nemo Zhou's Frailty_Komoto shareable clinical metrics code
 # Author: Lifei Wang
 # Acknowledgements: Nemo Zhou
 # Date started: 2026-10-12
