@@ -7,15 +7,17 @@ source("Code/shareable_clinical_metrics/1_configure_clinical_metrics.R")
 # Date started: 2026-10-12
 # Date last updated: 2026-10-12
 #
+# ---- Adapted for the Care Quality project ----
+# CHANGED: scores every year in config$analysis_year (2016-2025), not only 2022.
+#
 # ---- Purpose ----
 # Calculate one CFI score per eligible 2022 patient-year from the compact CFI
 # feature-match table. Each CFI disease number contributes at most once. The
 # score is the supplied model intercept (0.10288 by default) plus the sum of the
 # supplied disease weights. Patient-years without matched features receive the
 # intercept-only score.
-#
-# ---- Adapted for the Care Quality project ----
-# CHANGED: scores every year in config$analysis_year (2016-2025), not only 2022.
+
+
 
 run_calculate_cfi <- function() {
   config <- get_shareable_clinical_metrics_config()

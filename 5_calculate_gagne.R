@@ -7,15 +7,16 @@ source("Code/shareable_clinical_metrics/1_configure_clinical_metrics.R")
 # Date started: 2026-10-12
 # Date last updated: 2026-10-12
 #
+# ---- Adapted for the Care Quality project ----
+# CHANGED: scores every year in config$analysis_year (2016-2025), not only 2022.
+#
 # ---- Purpose ----
 # Calculate Gagne's combined comorbidity score from the compact diagnosis
 # feature matches. Each supplied Gagne group contributes at most once per
 # patient-year. The output retains every group indicator, the number of observed
 # groups, and the sum of their supplied weights. Patient-years without a matched
 # group receive zero indicators, a zero group count, and a zero score.
-#
-# ---- Adapted for the Care Quality project ----
-# CHANGED: scores every year in config$analysis_year (2016-2025), not only 2022.
+
 
 gagne_indicator_name <- function(group_number, description) {
   cleaned <- tolower(description)
