@@ -2,6 +2,7 @@ library(DatabaseConnector)
 library(keyring)
 library(DBI)
 
+
 # Project: Frailty_Komoto shareable clinical metrics (2016-2025)
 # Author: Lifei Wang
 # Acknowledgements: Nemo Zhou
@@ -16,6 +17,8 @@ library(DBI)
 #   4. replace_existing = TRUE, so a rerun replaces old outputs instead of stopping
 #   5. connection: same way as our training code (createConnectionDetails), so the
 #      ohdsilab package is not needed; driver folder set to our drivers folder
+#   6. table_exists(): for our work_ schema, no test query that can fail (it blocked later SQL);
+#      and after any failed test query, run ROLLBACK so the next SQL still works
 #
 # ---- Purpose ----
 # Define the configuration and reusable Redshift helpers used by the shareable
@@ -34,13 +37,13 @@ shareable_clinical_metrics_default_config <- function() {
     eligibility_table = "ps_matched",   # CHANGED: our matched HIV + non-HIV table
     normalized_dx_table = "normalized_dx_events",
     normalized_procedure_table = "normalized_procedure_events",
-    lookup_dir = file.path(  
+    lookup_dir = file.path(
       project_root,
       "Code",
       "shareable_clinical_metrics",
       "Clinical Metric Look Up Tables"
     ),
-    ccw30_lookup_dir = file.path(  
+    ccw30_lookup_dir = file.path(
       project_root,
       "Code",
       "shareable_clinical_metrics",
@@ -198,6 +201,15 @@ require_columns <- function(data, columns, label) {
   invisible(data)
 }
 
+# CHANGED: after a failed test query, clear the failed transaction (ROLLBACK).
+# Otherwise Redshift says "current transaction is aborted" and refuses the next SQL.
+clear_failed_transaction <- function(con) {
+  try(DatabaseConnector::executeSql(con, "ROLLBACK;",
+                                    progressBar = FALSE, reportOverallTime = FALSE),
+      silent = TRUE)
+  invisible(NULL)
+}
+
 table_exists <- function(con, schema, table) {
   result <- tryCatch(
     DBI::dbGetQuery(
@@ -209,10 +221,16 @@ table_exists <- function(con, schema, table) {
         "  AND table_name = ", sql_string(table)
       )
     ),
-    error = function(e) NULL
+    error = function(e) { clear_failed_transaction(con); NULL }   # CHANGED: added ROLLBACK
   )
   if (!is.null(result) && result$n[[1]] > 0L) {
     return(TRUE)
+  }
+  # CHANGED: for our own work_ schema the answer above is reliable, so stop here.
+  # (The test query below fails when the table does not exist, and on our
+  #  connection that failure blocks every later SQL: "current transaction is aborted".)
+  if (!is.null(result) && startsWith(schema, "work_")) {
+    return(FALSE)
   }
 
   # Some readable Redshift external tables are not exposed consistently through
@@ -223,7 +241,7 @@ table_exists <- function(con, schema, table) {
       paste0("SELECT * FROM ", qualified_identifier(schema, table), " LIMIT 0")
     )
     TRUE
-  }, error = function(e) FALSE))
+  }, error = function(e) { clear_failed_transaction(con); FALSE }))   # CHANGED: added ROLLBACK
 }
 
 get_table_columns <- function(con, schema, table) {
