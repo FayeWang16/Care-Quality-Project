@@ -1,0 +1,23 @@
+metric,check_name,status,detail
+CFI,required_files_present,pass,CFI_ICD9CM_V32.csv; CFI_ICD10CM_V2020.csv; pxlookup.txt; disease_weight.txt
+CFI,diagnosis_lookup_rows,pass,34581
+CFI,procedure_lookup_rows,pass,45
+CFI,weight_rows,pass,93
+CCW,source_file_present,pass,D:/Users/xia.zhou/Documents/Frailty_Komoto/Documents/CCW code/11_ccw_setup.sas
+CCW,condition_count,pass,56
+CCW,lookup_row_count,pass,5974
+CCW,all_conditions_have_group,pass,all grouped
+CCW,all_rules_prefix_match,pass,Source SAS uses if code in: prefix semantics.
+HIV,source_file_present,pass,D:/Users/xia.zhou/Documents/Frailty_Komoto/Documents/HIV code/1.a.ID_HIVpop_K01_bk2.sas
+HIV,diagnosis_code_count,pass,34
+HIV,claim_window_rule_recorded,pass,calendar_year
+HIV,pharmacy_evidence_excluded,pass,HIV lookup uses diagnosis evidence only.
+GAGNE,required_files_present,pass,comorb_dxfmt1f.sas7bdat; comorb_dxfmt2f.sas7bdat; comorb_dxfmt3f.sas7bdat; comorb_dxfmt4f.sas7bdat; comorb_dxfmt5f.sas7bdat; comorb_dxfmt6f.sas7bdat; comorb_dxfmt7f.sas7bdat; comorb_dxfmt8f.sas7bdat; comorb_dxfmt9f.sas7bdat; comorb_dxfmt10f.sas7bdat; comorb_dxfmt11f.sas7bdat; comorb_dxfmt12f.sas7bdat; comorb_dxfmt13f.sas7bdat; comorb_dxfmt14f.sas7bdat; comorb_dxfmt15f.sas7bdat; comorb_dxfmt16f.sas7bdat; comorb_dxfmt17f.sas7bdat; comorb_dxfmt18f.sas7bdat; comorb_dxfmt19f.sas7bdat; comorb_dxfmt20f.sas7bdat; comorb_weight.sas7bdat
+GAGNE,format_file_count,pass,20
+GAGNE,weight_group_count,pass,20
+GAGNE,all_dx_groups_have_weight,pass,
+GAGNE,all_weight_groups_have_dx_lookup,pass,
+GAGNE,analysis_window_recorded,pass,calendar_year
+GAGNE,match_type_counts,pass,exact=156; prefix=65; range=54
+ALL,unified_diagnosis_lookup_rows,pass,40864
+ALL,analysis_time_unit,pass,calendar_year
